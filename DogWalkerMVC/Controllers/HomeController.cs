@@ -37,9 +37,14 @@ namespace DogWalkerMVC.Controllers
             var dogsNotWalkedToday = GetDogsNotWalkedToday();
             var topWalkers = GetTopWalkers();
 
+            var totalWalkTimeInMinutes = topWalkers.Sum(w => w.TotalDuration);
+            var totalWalkTimeSpan = TimeSpan.FromMinutes(totalWalkTimeInMinutes);
+            var totalWalkDisplay = $"{totalWalkTimeSpan.Hours} Hours {totalWalkTimeSpan.Minutes} Minutes";
+
             viewModel.Dogs = dogsNotWalkedToday;
             viewModel.Today = DateTime.Now;
             viewModel.TopWalkers = topWalkers;
+            viewModel.TotalWalkTime = totalWalkDisplay;
 
             return View(viewModel);
         }
