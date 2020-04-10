@@ -1,8 +1,73 @@
-﻿@{
+﻿@model DogWalkerMVC.Models.ViewModels.HomepageViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <div class="row">
+        <div class="col home-nav">
+            <div class="row">
+                <a asp-action="Create" asp-controller="Owners" class="col-12">
+                    <div class="home-nav__nav-item">
+                        New Owner
+                    </div>
+                </a>
+            </div>
+            <div class="row">
+                <a asp-action="Create" asp-controller="Walkers" class="col-12">
+                    <div class="home-nav__nav-item">
+                        New Walker
+                    </div>
+                </a>
+            </div>
+            <div class="row">
+                <a asp-action="Create" asp-controller="Neighborhoods" class="col-12">
+                    <div class="home-nav__nav-item">
+                        New Neighborhood
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h2>This Week Total Walk Time</h2>
+                    <div class="card-subtitle">@Model.TotalWalkTime</div>
+                </div>
+                <div class="card-body">
+                    <h3>Top 3 Walkers</h3>
+                    <div class="list-group">
+                        @foreach (var walker in Model.TopWalkers)
+                        {
+                            <a href="#" class="list-group-item d-flex justify-content-between align-items-center">
+                                @walker.Name
+                                <span class="badge badge-primary badge-pill">
+                                    @(walker.TotalDuration / 60) hrs
+                                </span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Dogs Not Walked Today</h2>
+                    <div class="card-subtitle">@Model.Today.ToString("MM/dd/yyyy")</div>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        @foreach (var dog in Model.Dogs)
+                        {
+                            <a href="#" class="list-group-item list-group-item-action">
+                                @dog.Name
+                            </a>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
