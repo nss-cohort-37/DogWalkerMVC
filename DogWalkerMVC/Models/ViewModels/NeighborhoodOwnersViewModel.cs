@@ -12,5 +12,7 @@ namespace DogWalkerMVC.Models.ViewModels
         public int OwnerCount { get; }
 
         public List<OwnerViewModel> OwnerViewModels { get; set; }
+
+        public List<WalkerViewModel> WalkerViewModels { get; set; }
     }
 }

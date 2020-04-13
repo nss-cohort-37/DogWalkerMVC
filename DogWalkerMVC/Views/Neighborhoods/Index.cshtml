@@ -18,6 +18,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Walkers)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Owners)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -30,8 +33,11 @@
                 @Html.DisplayFor(modelItem => item.Walkers)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Owners)
+            </td>
+            <td>
 
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id })
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
             </td>
         </tr>
 }
