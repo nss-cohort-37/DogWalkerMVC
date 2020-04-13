@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DogWalkerMVC.Models;
 using DogWalkerMVC.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -59,11 +60,7 @@ namespace DogWalkerMVC.Controllers
             }
         }
 
-        // GET: Neighborhoods/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+    
 
         // GET: Neighborhoods/Create
         public ActionResult Create()
@@ -74,15 +71,30 @@ namespace DogWalkerMVC.Controllers
         // POST: Neighborhoods/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Neighborhood neighborhood)
         {
             try
             {
-                // TODO: Add insert logic here
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"INSERT INTO Neighborhood (Name)
+                                            OUTPUT INSERTED.Id
+                                            VALUES (@name)";
 
-                return RedirectToAction(nameof(Index));
+                        cmd.Parameters.Add(new SqlParameter("@name", neighborhood.Name));
+
+                        var id = (int)cmd.ExecuteScalar();
+                        neighborhood.Id = id;
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+
+
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
             }
@@ -91,21 +103,43 @@ namespace DogWalkerMVC.Controllers
         // GET: Neighborhoods/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var neighborhood = GetNeighborhoodById(id);
+            return View(neighborhood);
         }
 
         // POST: Neighborhoods/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Neighborhood neighborhood)
         {
             try
             {
-                // TODO: Add update logic here
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"UPDATE Neighborhood
+                                           SET Name = @name
+                                               WHERE Id = @id";
 
-                return RedirectToAction(nameof(Index));
+                        cmd.Parameters.Add(new SqlParameter("@name", neighborhood.Name));
+
+
+                        cmd.Parameters.Add(new SqlParameter("@id", id));
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            return RedirectToAction(nameof(Index));
+                        }
+                        throw new Exception("No rows affected");
+
+
+                    }
+                }
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
             }
@@ -131,6 +165,35 @@ namespace DogWalkerMVC.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+        private Neighborhood GetNeighborhoodById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT n.Id, n.Name FROM Neighborhood n WHERE n.Id = @id";
+
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+
+                    var reader = cmd.ExecuteReader();
+                    Neighborhood neighborhood = null;
+
+                    if (reader.Read())
+                    {
+                        neighborhood = new Neighborhood()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name"))
+                        };
+
+                    }
+                    reader.Close();
+                    return neighborhood;
+                }
             }
         }
     }
