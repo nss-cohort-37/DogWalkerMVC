@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DogWalkerMVC.Models
+namespace DogWalkerMVC.Models.ViewModels
 {
-    public class Neighborhood
+    public class NeighborhoodBreakdown
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<Walker> Walkers { get; internal set; }
+        public int WalkerCount { get; set; }
     }
 }

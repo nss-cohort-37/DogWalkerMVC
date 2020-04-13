@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DogWalkerMVC.Models;
+using DogWalkerMVC.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -37,16 +38,20 @@ namespace DogWalkerMVC.Controllers
                 using(SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT n.Id, n.Name
-                        FROM Neighborhood n";
+                        SELECT n.Id, n.Name, Count(w.NeighborhoodId) AS Walkers
+                        FROM Neighborhood n
+                        LEFT JOIN Walker w
+                        ON w.NeighborhoodId = n.Id
+                        GROUP BY n.Id, n.Name";
                     SqlDataReader reader = cmd.ExecuteReader();
-                    List<Neighborhood> neighborhoods = new List<Neighborhood>();
+                    List<NeighborhoodBreakdown> neighborhoods = new List<NeighborhoodBreakdown>();
                     while(reader.Read())
                     {
-                        Neighborhood neighborhood = new Neighborhood
+                        NeighborhoodBreakdown neighborhood = new NeighborhoodBreakdown
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Name = reader.GetString(reader.GetOrdinal("Name"))
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            WalkerCount = reader.GetInt32(reader.GetOrdinal("Walkers")),
                         };
                         neighborhoods.Add(neighborhood);
                     }
@@ -60,7 +65,8 @@ namespace DogWalkerMVC.Controllers
         // GET: Neighborhood/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var neighborhood = GetNeighborhoodById(id);
+            return View(neighborhood);
         }
 
         // GET: Neighborhood/Create
@@ -129,6 +135,40 @@ namespace DogWalkerMVC.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+        private NeighborhoodBreakdown GetNeighborhoodById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT n.Id, n.Name, Count(w.NeighborhoodId) AS Walkers
+                        FROM Neighborhood n
+                        LEFT JOIN Walker w
+                        ON w.NeighborhoodId = n.Id
+                        WHERE n.Id = @id
+                        GROUP BY n.Id, n.Name";
+
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+
+                    var reader = cmd.ExecuteReader();
+                    NeighborhoodBreakdown neighborhood = null;
+
+                    if (reader.Read())
+                    {
+                        neighborhood = new NeighborhoodBreakdown()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            WalkerCount = reader.GetInt32(reader.GetOrdinal("Walkers"))
+                        };
+                    }
+                    reader.Close();
+                    return neighborhood;
+                }
             }
         }
     }
