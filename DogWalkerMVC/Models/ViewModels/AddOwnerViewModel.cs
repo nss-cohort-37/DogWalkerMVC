@@ -19,7 +19,7 @@ namespace DogWalkerMVC.Models.ViewModels
         public string Address { get; set; }
 
         public string Phone { get; set; }
-
+        [Display(Name = "Neighborhood")]
         public int NeighborhoodId { get; set; }
 
         public List<SelectListItem> NeighborhoodOptions { get; set; }
