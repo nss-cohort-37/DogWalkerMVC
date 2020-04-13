@@ -84,3 +84,43 @@ body {
     .home-nav__nav-item:hover {
         background-color: rgba(20,90,159, .8);
     }
+
+/*NeighborhoodsPage*/
+.neighborhoodHeader {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 2em;
+    margin-left: 8%;
+}
+.neighborhoodTitle {
+    margin-right: 3em;
+}
+
+.createButton {
+    width: 8em;
+    border-radius: 2em;
+    background-color: #F0F0F0;
+    border-color: grey;
+}
+
+.createButton a {
+    color: grey;
+    text-decoration: none;
+}
+
+.neighborhoodRow:hover {
+    background-color: #F0F0F0;
+}
+.NeighborhoodTable {
+    width: 33%;
+    margin-left: 8%;
+    border: none;
+}
+
+.NeighborhoodTable th, td {
+    border: none;
+}
+
+.penIcon {
+    opacity: .5;
+}
