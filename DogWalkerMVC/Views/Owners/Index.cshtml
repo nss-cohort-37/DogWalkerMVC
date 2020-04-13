@@ -1,0 +1,42 @@
+﻿@model DogWalkerMVC.Models.ViewModels.AllOwnersByNeighborhoodViewModel
+
+@{
+    ViewData["Title"] = "Owners";
+}
+
+<h1>Owners</h1>
+
+<p>
+   <a asp-action="Create">Add</a>
+</p>
+
+@foreach(var item in Model.NeighborhoodOwnersViewModels)
+{
+ 
+
+<table class="table">
+    
+    <thead>
+        <tr>
+            <th>@Html.DisplayFor(itemModel => item.NeighborhoodName)</th>
+            <th>Owners @Html.DisplayFor(itemModel => item.OwnerViewModels.Count)</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td class="owner_Name">Owner Name</td>
+            <td class="dogCount">Dog Count</td>
+        </tr>
+        @foreach (var owner in item.OwnerViewModels)
+        {
+            <tr>
+                <td>@Html.DisplayFor(itemModel => owner.OwnerName)</td>
+                <td>@Html.DisplayFor(itemModel => owner.DogCount)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+ 
+}
