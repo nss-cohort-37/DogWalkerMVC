@@ -12,5 +12,6 @@ namespace DogWalkerMVC.Models
         public int NeighborhoodId { get; set; }
         public Neighborhood Neighborhood { get; set; }
         public List<Walk> Walks { get; set; }
+        public int WalkerCount { get; internal set; }
     }
 }

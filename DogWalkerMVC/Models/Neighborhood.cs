@@ -9,5 +9,6 @@ namespace DogWalkerMVC.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public List<Walker> Walkers { get; internal set; }
     }
 }
