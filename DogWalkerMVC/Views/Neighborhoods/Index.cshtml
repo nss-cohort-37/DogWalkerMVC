@@ -29,10 +29,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Walkers)
             </td>
-            <td>
+            <a asp-action="Edit"
+               asp-route-id="@item.Id">
 
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id })
-            </td>
+                <img src="~/Icons/edit.svg" />
+            </a>
         </tr>
 }
     </tbody>
