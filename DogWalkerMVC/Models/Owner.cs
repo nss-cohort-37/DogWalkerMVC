@@ -7,6 +7,7 @@ namespace DogWalkerMVC.Models
 {
     public class Owner
     {
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -16,5 +17,6 @@ namespace DogWalkerMVC.Models
         public int NeighborhoodId { get; set; }
 
         public string Phone { get; set; }
+
     }
 }
